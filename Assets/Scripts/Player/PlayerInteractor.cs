@@ -2,17 +2,12 @@ using UnityEngine;
 
 public class PlayerInteractor : MonoBehaviour
 {
-    [SerializeField] private Transform interactionOrigin;
     [SerializeField] private float interactionDistance = 0.75f;
     [SerializeField] private float interactionRadius = 0.2f;
-    [SerializeField] private LayerMask interactionMask = Physics2D.DefaultRaycastLayers;
 
     public bool TryInteract(Vector2 facingDirection, PlayerController player)
     {
-        Vector2 direction = DirectionUtility.ToCardinal(facingDirection);
-        Vector2 origin = interactionOrigin != null ? (Vector2)interactionOrigin.position : (Vector2)transform.position;
-
-        RaycastHit2D hit = Physics2D.CircleCast(origin, interactionRadius, direction, interactionDistance, interactionMask);
+        RaycastHit2D hit = Cast(facingDirection);
         if (!hit.collider)
             return false;
 
@@ -23,9 +18,22 @@ public class PlayerInteractor : MonoBehaviour
         return true;
     }
 
+    public bool TryLight(Vector2 facingDirection, PlayerController player)
+    {
+        RaycastHit2D hit = Cast(facingDirection);
+        if (!hit.collider)
+            return false;
+
+        if (!hit.collider.TryGetComponent<ILightable>(out ILightable lightable))
+            return false;
+
+        lightable.Light(player);
+        return true;
+    }
+
     private void OnDrawGizmosSelected()
     {
-        Vector2 origin = interactionOrigin != null ? (Vector2)interactionOrigin.position : (Vector2)transform.position;
+        Vector2 origin = transform.position;
 
         Vector2 direction = Vector2.down;
         PlayerMotor motor = GetComponent<PlayerMotor>();
@@ -38,4 +46,10 @@ public class PlayerInteractor : MonoBehaviour
         Gizmos.DrawWireSphere(origin + direction * interactionDistance, interactionRadius);
     }
 
+    private RaycastHit2D Cast(Vector2 facingDirection)
+    {
+        Vector2 direction = DirectionUtility.ToCardinal(facingDirection);
+        Vector2 origin = transform.position;
+        return Physics2D.CircleCast(origin, interactionRadius, direction, interactionDistance);
+    }
 }

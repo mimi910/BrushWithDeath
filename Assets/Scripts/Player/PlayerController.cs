@@ -98,7 +98,8 @@ public class PlayerController : MonoBehaviour
 
     private void HandleLantern()
     {
-        Debug.Log("Lantern action not implemented yet.");
+        Debug.Log("Player used lantern.");
+        interactor.TryLight(motor.FacingDirection, this);
     }
 
     private void HandleGuitar()
