@@ -31,7 +31,7 @@ public class PlayerController : MonoBehaviour
         interactor = GetComponent<PlayerInteractor>();
 
         if (pistaController == null)
-            pistaController = FindObjectOfType<PistaController>();
+            pistaController = FindAnyObjectByType<PistaController>();
     }
 
     private void Update()
