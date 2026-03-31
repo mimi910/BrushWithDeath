@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private Animator animator;
     [SerializeField] private PistaController pistaController;
+    [SerializeField] private TempoService tempoService;
 
     private PlayerInputReader inputReader;
     private PlayerMotor motor;
@@ -32,6 +33,9 @@ public class PlayerController : MonoBehaviour
 
         if (pistaController == null)
             pistaController = FindAnyObjectByType<PistaController>();
+
+        if (tempoService == null)
+            tempoService = TempoService.Instance != null ? TempoService.Instance : FindAnyObjectByType<TempoService>();
     }
 
     private void Update()
@@ -49,6 +53,10 @@ public class PlayerController : MonoBehaviour
                 HandleNormalState();
                 break;
 
+            case PlayerState.PlayingTempo:
+                HandleTempoFocusState();
+                break;
+
             case PlayerState.PistaFocus:
                 HandlePistaFocusState();
                 break;
@@ -61,12 +69,12 @@ public class PlayerController : MonoBehaviour
 
     private void HandleNormalState()
     {
-        // if (inputReader.PistaHeld)
-        // {
-        //     SetState(PlayerState.PistaFocus);
-        //     motor.StopMovement();
-        //     return;
-        // }
+        if (inputReader.TempoHeld)
+        {
+            EnterTempoFocus();
+            HandleTempoFocusState();
+            return;
+        }
 
         motor.SetMovementInput(inputReader.MoveInput);
 
@@ -79,11 +87,22 @@ public class PlayerController : MonoBehaviour
         if (inputReader.GuitarPressed)
             HandleGuitar();
 
-        if (inputReader.TempoPressed)
-            HandleTempo();
-
         if (inputReader.PistaPressed)
             HandlePista();
+    }
+
+    private void HandleTempoFocusState()
+    {
+        motor.StopMovement();
+
+        if (!inputReader.TempoHeld)
+        {
+            ExitTempoFocus(allowGraceCompletion: true);
+            return;
+        }
+
+        if (inputReader.TryGetTempoSelectionHeld(out TempoBand selectedTempo))
+            tempoService?.BeginChannel(selectedTempo);
     }
 
     private void HandlePistaFocusState()
@@ -143,11 +162,6 @@ public class PlayerController : MonoBehaviour
         Debug.Log("Guitar action not implemented yet.");
     }
 
-    private void HandleTempo()
-    {
-        Debug.Log("Tempo action not implemented yet.");
-    }
-
     private void HandlePista()
     {
         if (inputReader.PistaRecallPressed)
@@ -161,5 +175,29 @@ public class PlayerController : MonoBehaviour
         pistaController?.BeginAiming();
         SetState(PlayerState.PistaFocus);
         motor.StopMovement();
+    }
+
+    public bool InterruptTempoFocus(bool allowGraceCompletion)
+    {
+        if (CurrentState != PlayerState.PlayingTempo)
+            return false;
+
+        ExitTempoFocus(allowGraceCompletion);
+        return true;
+    }
+
+    private void EnterTempoFocus()
+    {
+        if (CurrentState == PlayerState.PlayingTempo)
+            return;
+
+        SetState(PlayerState.PlayingTempo);
+        motor.StopMovement();
+    }
+
+    private void ExitTempoFocus(bool allowGraceCompletion)
+    {
+        tempoService?.CancelChannel(allowGraceCompletion);
+        SetState(PlayerState.Normal);
     }
 }
