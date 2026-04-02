@@ -3,6 +3,7 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerInputReader))]
 [RequireComponent(typeof(PlayerMotor))]
 [RequireComponent(typeof(PlayerInteractor))]
+[RequireComponent(typeof(PlayerDamageReceiver))]
 public class PlayerController : MonoBehaviour
 {
     public enum PlayerState
@@ -27,6 +28,9 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
+        if (!TryGetComponent<PlayerDamageReceiver>(out _))
+            gameObject.AddComponent<PlayerDamageReceiver>();
+
         inputReader = GetComponent<PlayerInputReader>();
         motor = GetComponent<PlayerMotor>();
         interactor = GetComponent<PlayerInteractor>();
