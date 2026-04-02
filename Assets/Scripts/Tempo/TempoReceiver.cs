@@ -1,9 +1,11 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class TempoReceiver : MonoBehaviour
 {
+    private static readonly HashSet<TempoReceiver> activeReceivers = new();
 
     [Serializable]
     public class TempoEvent : UnityEvent<TempoBand> { }
@@ -17,6 +19,11 @@ public class TempoReceiver : MonoBehaviour
     [SerializeField] private UnityEvent onTempoMatched;
     [SerializeField] private UnityEvent onTempoMismatched;
     [SerializeField] private TempoEvent onTempoReceived;
+
+    public static IReadOnlyCollection<TempoReceiver> ActiveReceivers => activeReceivers;
+
+    private bool hasReceivedTempo;
+    private TempoBand lastReceivedTempo = TempoBand.Mid;
 
     private void Awake()
     {
@@ -32,6 +39,9 @@ public class TempoReceiver : MonoBehaviour
 
     private void OnEnable()
     {
+        activeReceivers.Add(this);
+        hasReceivedTempo = false;
+
         if (!listenToGlobalTempo)
             return;
 
@@ -47,12 +57,20 @@ public class TempoReceiver : MonoBehaviour
 
     private void OnDisable()
     {
+        activeReceivers.Remove(this);
+
         if (tempoService != null)
             tempoService.TempoUpdated -= HandleTempoUpdated;
     }
 
     public void ReceiveTempo(TempoBand tempo)
     {
+        if (hasReceivedTempo && lastReceivedTempo == tempo)
+            return;
+
+        hasReceivedTempo = true;
+        lastReceivedTempo = tempo;
+
         bool isMatch = tempo == requiredTempo;
         if (invertMatchResult)
             isMatch = !isMatch;
