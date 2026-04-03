@@ -4,6 +4,7 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerMotor))]
 [RequireComponent(typeof(PlayerInteractor))]
 [RequireComponent(typeof(PlayerDamageReceiver))]
+[RequireComponent(typeof(TempoGroundIndicator))]
 public class PlayerController : MonoBehaviour
 {
     public enum PlayerState
@@ -30,6 +31,9 @@ public class PlayerController : MonoBehaviour
     {
         if (!TryGetComponent<PlayerDamageReceiver>(out _))
             gameObject.AddComponent<PlayerDamageReceiver>();
+
+        if (!TryGetComponent<TempoGroundIndicator>(out _))
+            gameObject.AddComponent<TempoGroundIndicator>();
 
         inputReader = GetComponent<PlayerInputReader>();
         motor = GetComponent<PlayerMotor>();
