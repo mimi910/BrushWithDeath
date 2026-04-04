@@ -167,7 +167,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleGuitar()
     {
-        Debug.Log("Guitar action not implemented yet.");
+        interactor.TryGuitarHit(motor.FacingDirection);
     }
 
     private void HandlePista()

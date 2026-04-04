@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Collider2D))]
@@ -25,7 +26,7 @@ public abstract class SkeletonEnemyBase : MonoBehaviour, IKnockbackable
 
     [Header("Stats")]
     [SerializeField, Min(0f)] private float moveSpeed = 2.5f;
-    [SerializeField, Min(0f)] private float knockbackAmount = 1f;
+    [SerializeField, FormerlySerializedAs("knockbackAmount"), Min(0f)] private float knockbackDistance = 1f;
     [SerializeField, Min(0f)] private float damage = 1f;
     [SerializeField, Min(0.01f)] private float attackSpeed = 1f;
     [SerializeField, Min(0f)] private float attackRange = 1.25f;
@@ -159,7 +160,7 @@ public abstract class SkeletonEnemyBase : MonoBehaviour, IKnockbackable
             ? direction.normalized
             : -FacingDirection;
 
-        float totalDistance = knockbackAmount * GetTempoModifier(CurrentTempo).knockbackMultiplier * Mathf.Max(0f, strengthMultiplier);
+        float totalDistance = knockbackDistance * GetTempoModifier(CurrentTempo).knockbackMultiplier * Mathf.Max(0f, strengthMultiplier);
         float duration = Mathf.Max(0.01f, knockbackDuration);
 
         desiredVelocity = Vector2.zero;
