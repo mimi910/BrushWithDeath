@@ -124,6 +124,9 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
+        if (inputReader.GuitarPressed)
+            pistaController?.TriggerPulseAttack();
+
         pistaController?.ProcessAimInput(inputReader.MoveInput);
 
         if (!inputReader.PistaHeld)
