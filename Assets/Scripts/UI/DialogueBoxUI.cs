@@ -1,5 +1,5 @@
 using System.Collections;
-using System.Reflection;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,7 +12,7 @@ public class DialogueBoxUI : MonoBehaviour
     [SerializeField] private RectTransform dialogueRoot;
     [SerializeField] private CanvasGroup dialogueCanvasGroup;
     [SerializeField] private Image portraitImage;
-    [SerializeField] private Component dialogueTextComponent;
+    [SerializeField] private TextMeshProUGUI dialogueText;
 
     [Header("Portrait Defaults")]
     [SerializeField] private Sprite defaultSignPortrait;
@@ -22,8 +22,6 @@ public class DialogueBoxUI : MonoBehaviour
     [SerializeField, Min(0.5f)] private float defaultDisplayDuration = 3.5f;
 
     private Coroutine hideRoutine;
-    private PropertyInfo cachedTextProperty;
-    private System.Type cachedTextType;
 
     public static DialogueBoxUI Instance
     {
@@ -108,7 +106,7 @@ public class DialogueBoxUI : MonoBehaviour
 
         if (!TrySetDialogueText(message))
         {
-            Debug.LogWarning("DialogueBoxUI could not write to the assigned text component.", this);
+            Debug.LogWarning("DialogueBoxUI is missing a TextMeshProUGUI reference.", this);
             return;
         }
 
@@ -146,29 +144,11 @@ public class DialogueBoxUI : MonoBehaviour
                 dialogueCanvasGroup = dialogueRoot.gameObject.AddComponent<CanvasGroup>();
         }
 
-        if (dialogueTextComponent == null)
-            dialogueTextComponent = GetComponentInChildren<Text>(true);
+        if (dialogueText == null)
+            dialogueText = GetComponentInChildren<TextMeshProUGUI>(true);
 
         if (portraitImage == null)
             portraitImage = GetComponentInChildren<Image>(true);
-
-        CacheTextProperty();
-    }
-
-    private void CacheTextProperty()
-    {
-        if (dialogueTextComponent == null)
-        {
-            cachedTextProperty = null;
-            cachedTextType = null;
-            return;
-        }
-
-        if (cachedTextType == dialogueTextComponent.GetType())
-            return;
-
-        cachedTextType = dialogueTextComponent.GetType();
-        cachedTextProperty = cachedTextType.GetProperty("text", BindingFlags.Instance | BindingFlags.Public);
     }
 
     private bool TrySetDialogueText(string message)
@@ -176,21 +156,10 @@ public class DialogueBoxUI : MonoBehaviour
         if (string.IsNullOrWhiteSpace(message))
             return false;
 
-        if (dialogueTextComponent == null)
+        if (dialogueText == null)
             return false;
 
-        if (dialogueTextComponent is Text legacyText)
-        {
-            legacyText.text = message;
-            return true;
-        }
-
-        CacheTextProperty();
-
-        if (cachedTextProperty == null || !cachedTextProperty.CanWrite || cachedTextProperty.PropertyType != typeof(string))
-            return false;
-
-        cachedTextProperty.SetValue(dialogueTextComponent, message);
+        dialogueText.text = message;
         return true;
     }
 
