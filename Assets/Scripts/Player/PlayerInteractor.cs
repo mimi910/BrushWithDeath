@@ -25,7 +25,7 @@ public class PlayerInteractor : MonoBehaviour
         if (!TryCast(facingDirection, out RaycastHit2D hit))
             return false;
 
-        if (!hit.collider.TryGetComponent<IInteractable>(out IInteractable interactable))
+        if (!TryGetInterface(hit.collider, out IInteractable interactable, out _))
             return false;
 
         interactable.Interact(player);
@@ -37,7 +37,7 @@ public class PlayerInteractor : MonoBehaviour
         if (!TryCast(facingDirection, out RaycastHit2D hit))
             return false;
 
-        if (!hit.collider.TryGetComponent<ILightable>(out ILightable lightable))
+        if (!TryGetInterface(hit.collider, out ILightable lightable, out _))
             return false;
 
         lightable.Light(player);
