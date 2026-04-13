@@ -125,6 +125,12 @@ public class PistaController : MonoBehaviour
         CurrentState = PistaState.FollowingPlayer;
     }
 
+    public void SnapToPlayer()
+    {
+        RecallToPlayer();
+        transform.position = GetFollowAnchorPosition();
+    }
+
     public int TriggerPulseAttack()
     {
         ContactFilter2D contactFilter = CreatePulseAttackContactFilter();

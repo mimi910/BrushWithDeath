@@ -9,6 +9,7 @@ public class PlayerDamageReceiver : MonoBehaviour, IDamageable
     public class DamageEvent : UnityEvent<float> { }
 
     [SerializeField] private PlayerController playerController;
+    [SerializeField] private PlayerHealth playerHealth;
     [SerializeField, Min(0f)] private float invulnerabilityDuration = 0.2f;
     [SerializeField] private bool interruptTempoOnDamage = true;
     [SerializeField] private bool logDamage = true;
@@ -23,25 +24,33 @@ public class PlayerDamageReceiver : MonoBehaviour, IDamageable
 
     private void Reset()
     {
-        if (playerController == null)
-            playerController = GetComponent<PlayerController>();
+        CacheReferences();
     }
 
     private void Awake()
     {
-        if (playerController == null)
-            playerController = GetComponent<PlayerController>();
+        CacheReferences();
     }
 
     public void ReceiveDamage(float damage, Vector2 hitDirection, GameObject source)
     {
-        if (Time.time < nextDamageTime)
+        if (playerHealth == null)
+        {
+            Debug.LogWarning("PlayerDamageReceiver is missing a PlayerHealth reference.", this);
+            return;
+        }
+
+        if (Time.time < nextDamageTime || playerHealth.IsDead)
             return;
 
-        nextDamageTime = Time.time + invulnerabilityDuration;
         LastDamageReceived = damage;
         LastHitDirection = hitDirection;
         LastSource = source;
+
+        if (!playerHealth.ApplyDamage(damage))
+            return;
+
+        nextDamageTime = Time.time + invulnerabilityDuration;
 
         if (interruptTempoOnDamage && playerController != null)
             playerController.InterruptTempoFocus(allowGraceCompletion: false);
@@ -54,5 +63,14 @@ public class PlayerDamageReceiver : MonoBehaviour, IDamageable
 
         onDamageTaken?.Invoke(damage);
         onDamaged?.Invoke();
+    }
+
+    private void CacheReferences()
+    {
+        if (playerController == null)
+            playerController = GetComponent<PlayerController>();
+
+        if (playerHealth == null)
+            playerHealth = GetComponent<PlayerHealth>();
     }
 }

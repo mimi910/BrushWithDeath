@@ -4,6 +4,7 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerMotor))]
 [RequireComponent(typeof(PlayerInteractor))]
 [RequireComponent(typeof(PlayerDamageReceiver))]
+[RequireComponent(typeof(PlayerHealth))]
 [RequireComponent(typeof(TempoGroundIndicator))]
 public class PlayerController : MonoBehaviour
 {
@@ -14,7 +15,8 @@ public class PlayerController : MonoBehaviour
         PlayingTempo,
         Damaged,
         Dialogue,
-        PistaFocus
+        PistaFocus,
+        Dead
     }
 
     [SerializeField] private Animator animator;
@@ -29,11 +31,9 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
-        if (!TryGetComponent<PlayerDamageReceiver>(out _))
-            gameObject.AddComponent<PlayerDamageReceiver>();
-
-        if (!TryGetComponent<TempoGroundIndicator>(out _))
-            gameObject.AddComponent<TempoGroundIndicator>();
+        EnsureRequiredComponent<PlayerDamageReceiver>();
+        EnsureRequiredComponent<PlayerHealth>();
+        EnsureRequiredComponent<TempoGroundIndicator>();
 
         inputReader = GetComponent<PlayerInputReader>();
         motor = GetComponent<PlayerMotor>();
@@ -156,6 +156,25 @@ public class PlayerController : MonoBehaviour
         CurrentState = newState;
     }
 
+    public void EnterDeathState(bool snapPistaToPlayer = false)
+    {
+        tempoService?.CancelChannel(allowGraceCompletion: false);
+
+        if (snapPistaToPlayer)
+            pistaController?.SnapToPlayer();
+        else
+            pistaController?.EndAiming();
+
+        motor.StopMovement();
+        SetState(PlayerState.Dead);
+    }
+
+    public void ExitDeathState()
+    {
+        motor.StopMovement();
+        SetState(PlayerState.Normal);
+    }
+
     private void HandleInteract()
     {
         Debug.Log("Player Interacted.");
@@ -195,6 +214,13 @@ public class PlayerController : MonoBehaviour
 
         ExitTempoFocus(allowGraceCompletion);
         return true;
+    }
+
+    private void EnsureRequiredComponent<T>()
+        where T : Component
+    {
+        if (!TryGetComponent<T>(out _))
+            gameObject.AddComponent<T>();
     }
 
     private void EnterTempoFocus()
