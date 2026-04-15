@@ -5,6 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerInteractor))]
 [RequireComponent(typeof(PlayerDamageReceiver))]
 [RequireComponent(typeof(PlayerHealth))]
+[RequireComponent(typeof(PlayerProgression))]
 [RequireComponent(typeof(TempoGroundIndicator))]
 public class PlayerController : MonoBehaviour
 {
@@ -33,6 +34,7 @@ public class PlayerController : MonoBehaviour
     {
         EnsureRequiredComponent<PlayerDamageReceiver>();
         EnsureRequiredComponent<PlayerHealth>();
+        EnsureRequiredComponent<PlayerProgression>();
         EnsureRequiredComponent<TempoGroundIndicator>();
 
         inputReader = GetComponent<PlayerInputReader>();
