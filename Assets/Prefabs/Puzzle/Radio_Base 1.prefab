@@ -57,60 +57,45 @@ MonoBehaviour:
   slowAuraColor: {r: 0.2, g: 0.6, b: 1, a: 0.2}
   fastAuraColor: {r: 1, g: 0.65, b: 0.2, a: 0.2}
   intenseAuraColor: {r: 1, g: 0.2, b: 0.2, a: 0.25}
+  offStateRenderer: {fileID: 3216314188308562056}
+  activeStateRenderer: {fileID: 3402448707460719370}
+  offSprite: {fileID: -8145360305058645958, guid: 3ffeea94189e2ff4a87b4b1554f8e51b, type: 3}
+  slowAnimationFrames:
+  - {fileID: 4113571547534120222, guid: 69f4eb623ac912347b2423a1b6739c2d, type: 3}
+  - {fileID: 6822822702159502954, guid: 69f4eb623ac912347b2423a1b6739c2d, type: 3}
+  - {fileID: 3743281342900509845, guid: 69f4eb623ac912347b2423a1b6739c2d, type: 3}
+  - {fileID: -7906849228254100654, guid: 69f4eb623ac912347b2423a1b6739c2d, type: 3}
+  - {fileID: -2280532714753959710, guid: 69f4eb623ac912347b2423a1b6739c2d, type: 3}
+  - {fileID: -8948084638489018331, guid: 69f4eb623ac912347b2423a1b6739c2d, type: 3}
+  - {fileID: -1888046401572579097, guid: 69f4eb623ac912347b2423a1b6739c2d, type: 3}
+  - {fileID: 1088369162888654212, guid: 69f4eb623ac912347b2423a1b6739c2d, type: 3}
+  slowAnimationFramesPerSecond: 10
+  fastAnimationFrames:
+  - {fileID: 811249912491788336, guid: 974e68149f85ef54b9fad890c8277614, type: 3}
+  - {fileID: 2293129524166671908, guid: 974e68149f85ef54b9fad890c8277614, type: 3}
+  - {fileID: -6450623023495062006, guid: 974e68149f85ef54b9fad890c8277614, type: 3}
+  - {fileID: -543281370800798157, guid: 974e68149f85ef54b9fad890c8277614, type: 3}
+  - {fileID: -3056058370510890900, guid: 974e68149f85ef54b9fad890c8277614, type: 3}
+  - {fileID: 919332358351291933, guid: 974e68149f85ef54b9fad890c8277614, type: 3}
+  - {fileID: -3079421484840694415, guid: 974e68149f85ef54b9fad890c8277614, type: 3}
+  - {fileID: -1997459035066086622, guid: 974e68149f85ef54b9fad890c8277614, type: 3}
+  fastAnimationFramesPerSecond: 10
+  intenseAnimationFrames:
+  - {fileID: 2585158881278149506, guid: 7d7ee94b3ec49704cb465bd722ca0729, type: 3}
+  - {fileID: -7815210692919200128, guid: 7d7ee94b3ec49704cb465bd722ca0729, type: 3}
+  - {fileID: 8330487201385766553, guid: 7d7ee94b3ec49704cb465bd722ca0729, type: 3}
+  - {fileID: 4944677178099942514, guid: 7d7ee94b3ec49704cb465bd722ca0729, type: 3}
+  - {fileID: 8031487610782620158, guid: 7d7ee94b3ec49704cb465bd722ca0729, type: 3}
+  - {fileID: 4554256372575562814, guid: 7d7ee94b3ec49704cb465bd722ca0729, type: 3}
+  - {fileID: 384693947377738771, guid: 7d7ee94b3ec49704cb465bd722ca0729, type: 3}
+  - {fileID: -3971864292478541607, guid: 7d7ee94b3ec49704cb465bd722ca0729, type: 3}
+  intenseAnimationFramesPerSecond: 10
   onTurnedOff:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 4093979437660565827}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 6750981678831131597}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   onTurnedOn:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 4093979437660565827}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 6750981678831131597}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
+      m_Calls: []
   onStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -148,7 +133,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.0036571622, y: -0.003657192}
+  m_Offset: {x: 0.156564, y: -0.021594644}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -158,7 +143,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.52457297, y: 0.7293723}
+  m_Size: {x: 0.85532236, y: 0.7401669}
   m_EdgeRadius: 0
 --- !u!1 &4093979437660565827
 GameObject:
@@ -186,8 +171,8 @@ Transform:
   m_GameObject: {fileID: 4093979437660565827}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.15, y: 0.15, z: 1}
+  m_LocalPosition: {x: 0.16, y: 0, z: 0}
+  m_LocalScale: {x: 3, y: 3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1470036494450914275}
@@ -239,9 +224,9 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 1875917246518206917, guid: 9626a19869d4a1544920215be7497bcd, type: 3}
+  m_Sprite: {fileID: -8145360305058645958, guid: 3ffeea94189e2ff4a87b4b1554f8e51b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -278,7 +263,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.128, y: 0.009, z: 0}
-  m_LocalScale: {x: 0.16, y: 0.145, z: 1}
+  m_LocalScale: {x: 3, y: 3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1470036494450914275}
@@ -330,7 +315,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_MaskInteraction: 0
   m_Sprite: {fileID: -5403380989781144272, guid: 16170e6d8b69e6d43a0358e6e4a6bbac, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -368,7 +353,7 @@ Transform:
   m_GameObject: {fileID: 7082535550120085362}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0.18, y: -0.13, z: 0}
   m_LocalScale: {x: 0.97200006, y: 0.97200006, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
