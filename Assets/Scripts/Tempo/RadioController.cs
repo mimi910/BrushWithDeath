@@ -33,6 +33,7 @@ public class RadioController : MonoBehaviour, IInteractable
     [SerializeField, Min(0f)] private float fastAnimationFramesPerSecond = 10f;
     [SerializeField] private Sprite[] intenseAnimationFrames;
     [SerializeField, Min(0f)] private float intenseAnimationFramesPerSecond = 10f;
+    [SerializeField] private ParticleSystem onParticleSystem;
     [SerializeField] private UnityEvent onTurnedOff;
     [SerializeField] private UnityEvent onTurnedOn;
     [SerializeField] private RadioStateEvent onStateChanged;
@@ -53,6 +54,7 @@ public class RadioController : MonoBehaviour, IInteractable
     {
         AutoAssignAuraRenderer();
         AutoAssignVisualRenderers();
+        AutoAssignParticleSystem();
 
         if (auraTransform == null && auraRenderer != null)
             auraTransform = auraRenderer.transform;
@@ -71,6 +73,7 @@ public class RadioController : MonoBehaviour, IInteractable
     {
         AutoAssignAuraRenderer();
         AutoAssignVisualRenderers();
+        AutoAssignParticleSystem();
 
         if (auraTransform == null && auraRenderer != null)
             auraTransform = auraRenderer.transform;
@@ -99,6 +102,7 @@ public class RadioController : MonoBehaviour, IInteractable
 
     private void OnDisable()
     {
+        StopOnParticles();
         ClearAffectedReceivers();
     }
 
@@ -205,6 +209,7 @@ public class RadioController : MonoBehaviour, IInteractable
         }
 
         ApplyRadioVisualState();
+        ApplyParticleState();
 
         if (!invokeEvents)
             return;
@@ -302,6 +307,14 @@ public class RadioController : MonoBehaviour, IInteractable
         }
     }
 
+    private void AutoAssignParticleSystem()
+    {
+        if (onParticleSystem != null)
+            return;
+
+        onParticleSystem = GetComponentInChildren<ParticleSystem>(true);
+    }
+
     private void ApplyRadioVisualState()
     {
         if (offStateRenderer != null)
@@ -332,6 +345,49 @@ public class RadioController : MonoBehaviour, IInteractable
         }
 
         ApplyActiveAnimationFrame(0f);
+    }
+
+    private void ApplyParticleState()
+    {
+        if (onParticleSystem == null)
+            return;
+
+        ApplyParticleColor();
+
+        if (!Application.isPlaying)
+            return;
+
+        if (IsActive)
+        {
+            if (!onParticleSystem.isPlaying)
+                onParticleSystem.Play(true);
+
+            return;
+        }
+
+        StopOnParticles();
+    }
+
+    private void ApplyParticleColor()
+    {
+        if (onParticleSystem == null)
+            return;
+
+        if (!IsActive)
+            return;
+
+        ParticleSystem.MainModule main = onParticleSystem.main;
+        Color particleColor = GetAuraColor(CurrentState);
+        particleColor.a = Mathf.Max(0.6f, particleColor.a);
+        main.startColor = particleColor;
+    }
+
+    private void StopOnParticles()
+    {
+        if (onParticleSystem == null)
+            return;
+
+        onParticleSystem.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
     }
 
     private void LateUpdate()
