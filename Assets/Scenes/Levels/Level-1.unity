@@ -2336,6 +2336,7 @@ GameObject:
   - component: {fileID: 692347695}
   - component: {fileID: 692347694}
   - component: {fileID: 692347697}
+  - component: {fileID: 692347698}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -2461,6 +2462,37 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
+--- !u!114 &692347698
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 692347693}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 831abf8874ff429c9168fec47f674f95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DynamicCameraFollow
+  target: {fileID: 726797884}
+  followDistance: 10
+  targetCamera: {fileID: 692347695}
+  playerController: {fileID: 726797877}
+  pistaController: {fileID: 859115996}
+  positionSmoothTime: 0.12
+  framingPadding: {x: 1.5, y: 1.25}
+  latchedPlayerWeight: 0.7
+  latchedPistaWeight: 0.3
+  movingPlayerWeight: 0.6
+  movingPistaWeight: 0.4
+  aimingPlayerWeight: 0.55
+  aimingPistaWeight: 0.2
+  aimingPreviewWeight: 0.25
+  extraPlayerWeightForNonNormalState: 0.15
+  baseOrthographicSize: 5
+  maxOrthographicSize: 7
+  zoomOutSmoothTime: 0.1
+  zoomInSmoothTime: 0.2
 --- !u!1 &726797871
 GameObject:
   m_ObjectHideFlags: 0
