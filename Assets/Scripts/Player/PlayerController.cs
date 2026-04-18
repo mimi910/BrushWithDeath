@@ -37,12 +37,16 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private PistaController pistaController;
     [SerializeField] private TempoService tempoService;
 
+    [Header("Actions")]
+    [SerializeField, Min(0f)] private float lanternUseCooldown = 0.25f;
+
     private PlayerInputReader inputReader;
     private PlayerMotor motor;
     private PlayerInteractor interactor;
     private PlayerLanternSwingVFX lanternSwingVfx;
     private bool hasLanternSwingTrigger;
     private bool hasIsDeadBool;
+    private float nextLanternUseTime = float.NegativeInfinity;
 
     public PlayerState CurrentState { get; private set; } = PlayerState.Normal;
 
@@ -113,14 +117,8 @@ public class PlayerController : MonoBehaviour
 
         motor.SetMovementInput(inputReader.MoveInput);
 
-        if (inputReader.InteractPressed)
-            HandleInteract();
-
         if (inputReader.LanternPressed)
             HandleLantern();
-
-        if (inputReader.GuitarPressed)
-            HandleGuitar();
 
         if (inputReader.PistaPressed)
             HandlePista();
@@ -151,7 +149,7 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        if (inputReader.GuitarPressed)
+        if (inputReader.LanternPressed)
             pistaController?.TriggerPulseAttack();
 
         pistaController?.ProcessAimInput(inputReader.MoveInput);
@@ -244,26 +242,19 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void HandleInteract()
-    {
-        Debug.Log("Player Interacted.");
-        interactor.TryInteract(motor.FacingDirection, this);
-    }
-
     private void HandleLantern()
     {
+        if (Time.time < nextLanternUseTime)
+            return;
+
+        nextLanternUseTime = Time.time + lanternUseCooldown;
+
         if (animator != null && hasLanternSwingTrigger)
             animator.SetTrigger(LanternSwingTriggerName);
 
         lanternSwingVfx?.Play(motor.FacingDirection);
 
-        Debug.Log("Player used lantern.");
-        interactor.TryLight(motor.FacingDirection, this);
-    }
-
-    private void HandleGuitar()
-    {
-        interactor.TryGuitarHit(motor.FacingDirection);
+        interactor.TryLanternSwing(motor.FacingDirection, this);
     }
 
     private void HandlePista()

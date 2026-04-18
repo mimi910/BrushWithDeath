@@ -251,6 +251,7 @@ MonoBehaviour:
   spriteRenderer: {fileID: 0}
   pistaController: {fileID: 0}
   tempoService: {fileID: 0}
+  lanternUseCooldown: 0.5
 --- !u!114 &6149729211161500281
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -265,10 +266,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInteractor
   interactionDistance: 1
   interactionRadius: 0.3
-  guitarHitboxSize: {x: 0.9, y: 1.15}
-  guitarHitboxDistance: 0.75
-  guitarKnockbackAmount: 1
-  guitarHitLayers:
+  lanternHitboxSize: {x: 0.9, y: 1.15}
+  lanternHitboxDistance: 0.75
+  lanternKnockbackAmount: 1
+  lanternHitLayers:
     serializedVersion: 2
     m_Bits: 4294967295
 --- !u!114 &1258796327146704444
@@ -334,7 +335,7 @@ MonoBehaviour:
   body: {fileID: 8298384755664297758}
   respawnPoint: {fileID: 0}
   maxHealth: 3
-  blackHoldDuration: 2
+  blackHoldDuration: 1.5
   onDeath:
     m_PersistentCalls:
       m_Calls: []

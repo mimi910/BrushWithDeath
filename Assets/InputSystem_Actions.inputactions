@@ -469,6 +469,28 @@
                     "action": "Lantern",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e2bde0a5-35a1-4d61-a8d3-5e0202c0e875",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Lantern",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "44abbfba-3f3f-4e90-be04-6b4aad6d66c3",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Lantern",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
