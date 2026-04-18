@@ -106,6 +106,9 @@ public class PlayerHealth : MonoBehaviour
 
     private IEnumerator RespawnAfterDelay()
     {
+        if (playerController != null)
+            yield return playerController.WaitForDeathAnimationToFinish();
+
         DeathScreenUI deathScreen = DeathScreenUI.Instance;
         if (deathScreen != null)
             yield return deathScreen.FadeToBlack();
@@ -116,11 +119,12 @@ public class PlayerHealth : MonoBehaviour
         if (holdDuration > 0f)
             yield return new WaitForSecondsRealtime(holdDuration);
 
+        IsDead = false;
+        playerController?.ExitDeathState();
+
         if (deathScreen != null)
             yield return deathScreen.FadeFromBlack();
 
-        IsDead = false;
-        playerController?.ExitDeathState();
         onRespawn?.Invoke();
         respawnRoutine = null;
     }

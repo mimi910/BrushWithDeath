@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(PlayerInputReader))]
@@ -13,6 +14,12 @@ public class PlayerController : MonoBehaviour
 {
     private const string LanternSwingTriggerName = "LanternSwing";
     private const string IsDeadBoolName = "IsDead";
+    private const string DeathStateName = "Death";
+    private const string DeathClipName = "Player_Death";
+    private const int BaseAnimatorLayer = 0;
+    private const float DeathAnimationTimeoutPadding = 0.15f;
+
+    private static readonly int DeathStateHash = Animator.StringToHash(DeathStateName);
 
     public enum PlayerState
     {
@@ -170,8 +177,7 @@ public class PlayerController : MonoBehaviour
         animator.SetFloat("FaceY", face.y);
         animator.SetBool("IsMoving", motor.IsMoving);
 
-        if (hasIsDeadBool)
-            animator.SetBool(IsDeadBoolName, CurrentState == PlayerState.Dead);
+        UpdateDeathAnimatorState();
     }
 
     public void SetState(PlayerState newState)
@@ -190,12 +196,52 @@ public class PlayerController : MonoBehaviour
 
         motor.StopMovement();
         SetState(PlayerState.Dead);
+        UpdateDeathAnimatorState();
     }
 
     public void ExitDeathState()
     {
         motor.StopMovement();
         SetState(PlayerState.Normal);
+        UpdateDeathAnimatorState();
+    }
+
+    public IEnumerator WaitForDeathAnimationToFinish()
+    {
+        if (animator == null || !hasIsDeadBool)
+            yield break;
+
+        float deathClipDuration = GetDeathClipDuration();
+        float timeout = Mathf.Max(0.1f, deathClipDuration + DeathAnimationTimeoutPadding);
+        float elapsed = 0f;
+
+        while (elapsed < timeout)
+        {
+            AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(BaseAnimatorLayer);
+            if (stateInfo.shortNameHash == DeathStateHash)
+                break;
+
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        if (elapsed >= timeout)
+        {
+            if (deathClipDuration > 0f)
+                yield return new WaitForSeconds(deathClipDuration);
+
+            yield break;
+        }
+
+        while (elapsed < timeout)
+        {
+            AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(BaseAnimatorLayer);
+            if (stateInfo.shortNameHash == DeathStateHash && !animator.IsInTransition(BaseAnimatorLayer) && stateInfo.normalizedTime >= 1f)
+                yield break;
+
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
     }
 
     private void HandleInteract()
@@ -270,6 +316,28 @@ public class PlayerController : MonoBehaviour
     {
         hasLanternSwingTrigger = HasAnimatorParameter(LanternSwingTriggerName, AnimatorControllerParameterType.Trigger);
         hasIsDeadBool = HasAnimatorParameter(IsDeadBoolName, AnimatorControllerParameterType.Bool);
+    }
+
+    private void UpdateDeathAnimatorState()
+    {
+        if (animator != null && hasIsDeadBool)
+            animator.SetBool(IsDeadBoolName, CurrentState == PlayerState.Dead);
+    }
+
+    private float GetDeathClipDuration()
+    {
+        if (animator == null || animator.runtimeAnimatorController == null)
+            return 0f;
+
+        AnimationClip[] clips = animator.runtimeAnimatorController.animationClips;
+        for (int i = 0; i < clips.Length; i++)
+        {
+            AnimationClip clip = clips[i];
+            if (clip != null && clip.name == DeathClipName)
+                return clip.length / Mathf.Max(0.0001f, animator.speed);
+        }
+
+        return 0f;
     }
 
     private bool HasAnimatorParameter(string parameterName, AnimatorControllerParameterType parameterType)
