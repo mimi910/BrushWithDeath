@@ -2437,6 +2437,63 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e928aa769e7a9b44e98802a0142ed6c8, type: 3}
+--- !u!1001 &361588999
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 6067055019359957709, guid: 256db178ccd73f44fbf5c8f8df0574a7, type: 3}
+      propertyPath: m_Name
+      value: MusicDirector
+      objectReference: {fileID: 0}
+    - target: {fileID: 7575859141414342356, guid: 256db178ccd73f44fbf5c8f8df0574a7, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7575859141414342356, guid: 256db178ccd73f44fbf5c8f8df0574a7, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7575859141414342356, guid: 256db178ccd73f44fbf5c8f8df0574a7, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7575859141414342356, guid: 256db178ccd73f44fbf5c8f8df0574a7, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7575859141414342356, guid: 256db178ccd73f44fbf5c8f8df0574a7, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7575859141414342356, guid: 256db178ccd73f44fbf5c8f8df0574a7, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7575859141414342356, guid: 256db178ccd73f44fbf5c8f8df0574a7, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7575859141414342356, guid: 256db178ccd73f44fbf5c8f8df0574a7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7575859141414342356, guid: 256db178ccd73f44fbf5c8f8df0574a7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7575859141414342356, guid: 256db178ccd73f44fbf5c8f8df0574a7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 256db178ccd73f44fbf5c8f8df0574a7, type: 3}
 --- !u!1001 &364132862
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7764,6 +7821,10 @@ PrefabInstance:
       value: "\u201CWhat the demons? I thought this was the way out, not another
         puzzle!\u201D "
       objectReference: {fileID: 0}
+    - target: {fileID: 5422746271883051085, guid: 5bd3d46b96b23fc43ae6fbef9bcf9813, type: 3}
+      propertyPath: portraitOverride
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 6331688727121655574, guid: 5bd3d46b96b23fc43ae6fbef9bcf9813, type: 3}
       propertyPath: m_Name
       value: DialogueTrigger_Base_01
@@ -7889,6 +7950,10 @@ PrefabInstance:
     - target: {fileID: 5422746271883051085, guid: 5bd3d46b96b23fc43ae6fbef9bcf9813, type: 3}
       propertyPath: dialogueText
       value: "\u201CWhoops.. You\u2019ve done it now.  I can hear them coming...\u201D "
+      objectReference: {fileID: 0}
+    - target: {fileID: 5422746271883051085, guid: 5bd3d46b96b23fc43ae6fbef9bcf9813, type: 3}
+      propertyPath: portraitOverride
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 6331688727121655574, guid: 5bd3d46b96b23fc43ae6fbef9bcf9813, type: 3}
       propertyPath: m_Name
@@ -116436,6 +116501,10 @@ PrefabInstance:
       propertyPath: dialogueText
       value: "\u201CWe should be safe here.  The dead can\u2019t cross.\u201D \r\n"
       objectReference: {fileID: 0}
+    - target: {fileID: 5422746271883051085, guid: 5bd3d46b96b23fc43ae6fbef9bcf9813, type: 3}
+      propertyPath: portraitOverride
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 6331688727121655574, guid: 5bd3d46b96b23fc43ae6fbef9bcf9813, type: 3}
       propertyPath: m_Name
       value: DialogueTrigger_Base_02
@@ -116788,6 +116857,7 @@ SceneRoots:
   - {fileID: 692347696}
   - {fileID: 566725137}
   - {fileID: 1036886695}
+  - {fileID: 361588999}
   - {fileID: 1215642669}
   - {fileID: 336121057}
   - {fileID: 922215362}

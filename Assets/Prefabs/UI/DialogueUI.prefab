@@ -320,7 +320,7 @@ MonoBehaviour:
   portraitImage: {fileID: 5742753841643354948}
   dialogueText: {fileID: 1534969787954526570}
   defaultSignPortrait: {fileID: 6791190734153182841, guid: 487de8756e40c9943aff1ad2738f19e4, type: 3}
-  defaultPistaPortrait: {fileID: 5292914565219399551, guid: 804c621b324c94f4ab8d3d24e45f65d5, type: 3}
+  defaultPistaPortrait: {fileID: -770952507786131419, guid: 3ffeea94189e2ff4a87b4b1554f8e51b, type: 3}
   defaultDisplayDuration: 3.5
   typewriterCharactersPerSecond: 25
 --- !u!225 &2376551760139632806
@@ -489,7 +489,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: -28.429352, y: -6.1033726, z: 0, w: 0}
+  m_margin: {x: 2.9142914, y: -6.1033726, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -529,7 +529,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 35, y: 0}
+  m_AnchoredPosition: {x: 52.48, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &2016669424013101255

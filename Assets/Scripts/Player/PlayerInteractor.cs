@@ -22,10 +22,7 @@ public class PlayerInteractor : MonoBehaviour
 
     public bool TryInteract(Vector2 facingDirection, PlayerController player)
     {
-        if (!TryCast(facingDirection, out RaycastHit2D hit))
-            return false;
-
-        if (!TryGetInterface(hit.collider, out IInteractable interactable, out _))
+        if (!TryFindTarget(facingDirection, out IInteractable interactable, out _))
             return false;
 
         interactable.Interact(player);
@@ -34,10 +31,7 @@ public class PlayerInteractor : MonoBehaviour
 
     public bool TryLight(Vector2 facingDirection, PlayerController player)
     {
-        if (!TryCast(facingDirection, out RaycastHit2D hit))
-            return false;
-
-        if (!TryGetInterface(hit.collider, out ILightable lightable, out _))
+        if (!TryFindTarget(facingDirection, out ILightable lightable, out _))
             return false;
 
         lightable.Light(player);
@@ -105,8 +99,12 @@ public class PlayerInteractor : MonoBehaviour
         Gizmos.matrix = previousMatrix;
     }
 
-    private bool TryCast(Vector2 facingDirection, out RaycastHit2D validHit)
+    private bool TryFindTarget<T>(Vector2 facingDirection, out T target, out Component component)
+        where T : class
     {
+        target = null;
+        component = null;
+
         Vector2 direction = DirectionUtility.ToCardinal(facingDirection);
         Vector2 origin = transform.position;
         RaycastHit2D[] hits = Physics2D.CircleCastAll(origin, interactionRadius, direction, interactionDistance);
@@ -116,11 +114,14 @@ public class PlayerInteractor : MonoBehaviour
             if (!hit.collider || IsSelfCollider(hit.collider))
                 continue;
 
-            validHit = hit;
+            if (!TryGetInterface(hit.collider, out target, out component))
+                continue;
+
             return true;
         }
 
-        validHit = default;
+        target = null;
+        component = null;
         return false;
     }
 

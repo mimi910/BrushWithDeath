@@ -16,6 +16,7 @@ public class LightableTorch : MonoBehaviour, ILightable
     [SerializeField] private PuzzleEventEmitter eventEmitter;
     [SerializeField] private SpriteRenderer targetRenderer;
     [SerializeField] private SpriteRenderer animatedVisualRenderer;
+    [SerializeField] private SpriteRenderer possessedVisualRenderer;
     [SerializeField] private SpriteRenderer selectorRenderer;
     [SerializeField] private bool startsLit;
     [SerializeField] private bool toggleOnLight = true;
@@ -41,6 +42,7 @@ public class LightableTorch : MonoBehaviour, ILightable
     public bool IsLit => stateSource != null ? stateSource.Value : startsLit;
 
     private Sprite defaultAnimatedVisualSprite;
+    private Sprite defaultPossessedVisualSprite;
     private Vector3 defaultSelectorLocalScale;
     private SpriteMask selectorMask;
     private bool isPossessedByPista;
@@ -64,11 +66,17 @@ public class LightableTorch : MonoBehaviour, ILightable
         if (animatedVisualRenderer == null)
             animatedVisualRenderer = FindAnimatedVisualRenderer();
 
+        if (possessedVisualRenderer == null)
+            possessedVisualRenderer = FindPossessedVisualRenderer();
+
         if (selectorRenderer == null)
             selectorRenderer = FindSelectorRenderer();
 
         if (animatedVisualRenderer != null)
             defaultAnimatedVisualSprite = animatedVisualRenderer.sprite;
+
+        if (possessedVisualRenderer != null)
+            defaultPossessedVisualSprite = possessedVisualRenderer.sprite;
 
         if (selectorRenderer != null)
         {
@@ -141,13 +149,13 @@ public class LightableTorch : MonoBehaviour, ILightable
             targetRenderer.color = isLit ? litColor : unlitColor;
 
         stateVisuals?.Apply(isLit);
-        SetAnimatedVisualVisible(isLit);
 
         if (playLitAnimation)
             BeginLitAnimationPlayback();
         else
             StopLitAnimationPlayback();
 
+        UpdateVisualRendererVisibility();
         ApplyAnimatedVisualImmediate();
     }
 
@@ -163,6 +171,7 @@ public class LightableTorch : MonoBehaviour, ILightable
         if (isPossessedByPista)
             StopLitAnimationPlayback();
 
+        UpdateVisualRendererVisibility();
         ApplyAnimatedVisualImmediate();
     }
 
@@ -181,33 +190,17 @@ public class LightableTorch : MonoBehaviour, ILightable
 
     private void UpdateAnimatedVisual()
     {
-        if (animatedVisualRenderer == null || !IsLit)
+        if (!IsLit)
             return;
 
-        if (ShouldUsePossessedVisuals())
+        if (ShouldRenderPossessedVisuals())
         {
-            Sprite[] possessedFrames = possessedAnimationFrames;
-            Sprite fallbackSprite = GetPossessedFallbackSprite();
-
-            if (!HasSprites(possessedFrames))
-            {
-                if (fallbackSprite != null)
-                    animatedVisualRenderer.sprite = fallbackSprite;
-                return;
-            }
-
-            float framesPerSecond = possessedAnimationFramesPerSecond;
-            if (framesPerSecond <= 0f)
-            {
-                animatedVisualRenderer.sprite = GetFirstAvailableSprite(possessedFrames) ?? fallbackSprite;
-                return;
-            }
-
-            animatedVisualElapsedTime += Time.deltaTime;
-            int frameIndex = Mathf.FloorToInt(animatedVisualElapsedTime * framesPerSecond) % possessedFrames.Length;
-            animatedVisualRenderer.sprite = possessedFrames[frameIndex] ?? fallbackSprite;
+            UpdatePossessedVisual();
             return;
         }
+
+        if (animatedVisualRenderer == null)
+            return;
 
         if (!isPlayingLitAnimation)
         {
@@ -277,32 +270,25 @@ public class LightableTorch : MonoBehaviour, ILightable
 
     private void ApplyAnimatedVisualImmediate()
     {
-        if (animatedVisualRenderer == null)
-            return;
-
         if (!IsLit)
         {
-            if (defaultAnimatedVisualSprite != null)
+            if (animatedVisualRenderer != null && defaultAnimatedVisualSprite != null)
                 animatedVisualRenderer.sprite = defaultAnimatedVisualSprite;
+
+            if (possessedVisualRenderer != null)
+                possessedVisualRenderer.sprite = defaultPossessedVisualSprite;
+
             return;
         }
 
-        if (ShouldUsePossessedVisuals())
+        if (ShouldRenderPossessedVisuals())
         {
-            Sprite[] possessedFrames = possessedAnimationFrames;
-            Sprite fallbackSprite = GetPossessedFallbackSprite();
-
-            if (HasSprites(possessedFrames))
-            {
-                animatedVisualRenderer.sprite = GetFirstAvailableSprite(possessedFrames) ?? fallbackSprite;
-                return;
-            }
-
-            if (fallbackSprite != null)
-                animatedVisualRenderer.sprite = fallbackSprite;
-
+            ApplyPossessedVisualImmediate();
             return;
         }
+
+        if (animatedVisualRenderer == null)
+            return;
 
         if (isPlayingLitAnimation)
         {
@@ -317,12 +303,16 @@ public class LightableTorch : MonoBehaviour, ILightable
         SetAnimatedVisualToDefaultLitSprite();
     }
 
-    private void SetAnimatedVisualVisible(bool isVisible)
+    private void UpdateVisualRendererVisibility()
     {
-        if (animatedVisualRenderer == null || animatedVisualRenderer == targetRenderer)
-            return;
+        bool showPossessedVisuals = IsLit && ShouldRenderPossessedVisuals();
+        bool showLitVisuals = IsLit && !showPossessedVisuals;
 
-        animatedVisualRenderer.gameObject.SetActive(isVisible);
+        if (animatedVisualRenderer != null && animatedVisualRenderer != targetRenderer)
+            animatedVisualRenderer.gameObject.SetActive(showLitVisuals);
+
+        if (possessedVisualRenderer != null)
+            possessedVisualRenderer.gameObject.SetActive(showPossessedVisuals);
     }
 
     private void BeginLitAnimationPlayback()
@@ -344,13 +334,29 @@ public class LightableTorch : MonoBehaviour, ILightable
         return null;
     }
 
+    private SpriteRenderer FindPossessedVisualRenderer()
+    {
+        SpriteRenderer[] renderers = GetComponentsInChildren<SpriteRenderer>(true);
+
+        foreach (SpriteRenderer renderer in renderers)
+        {
+            if (renderer == null || renderer == targetRenderer || renderer == animatedVisualRenderer)
+                continue;
+
+            if (renderer.name == "TorchPossessedVisual")
+                return renderer;
+        }
+
+        return null;
+    }
+
     private SpriteRenderer FindSelectorRenderer()
     {
         SpriteRenderer[] renderers = GetComponentsInChildren<SpriteRenderer>(true);
 
         foreach (SpriteRenderer renderer in renderers)
         {
-            if (renderer != null && renderer != targetRenderer && renderer != animatedVisualRenderer)
+            if (renderer != null && renderer != targetRenderer && renderer != animatedVisualRenderer && renderer != possessedVisualRenderer)
                 return renderer;
         }
 
@@ -398,12 +404,65 @@ public class LightableTorch : MonoBehaviour, ILightable
         if (ShouldUsePossessedVisuals() && possessedSpriteFallback != null)
             return possessedSpriteFallback;
 
+        if (ShouldUsePossessedVisuals() && defaultPossessedVisualSprite != null)
+            return defaultPossessedVisualSprite;
+
         return null;
     }
 
     private bool ShouldUsePossessedVisuals()
     {
         return isPossessedByPista && (HasSprites(possessedAnimationFrames) || possessedSpriteFallback != null);
+    }
+
+    private bool ShouldRenderPossessedVisuals()
+    {
+        return possessedVisualRenderer != null && ShouldUsePossessedVisuals();
+    }
+
+    private void UpdatePossessedVisual()
+    {
+        if (possessedVisualRenderer == null)
+            return;
+
+        Sprite[] possessedFrames = possessedAnimationFrames;
+        Sprite fallbackSprite = GetPossessedFallbackSprite();
+
+        if (!HasSprites(possessedFrames))
+        {
+            if (fallbackSprite != null)
+                possessedVisualRenderer.sprite = fallbackSprite;
+            return;
+        }
+
+        float framesPerSecond = possessedAnimationFramesPerSecond;
+        if (framesPerSecond <= 0f)
+        {
+            possessedVisualRenderer.sprite = GetFirstAvailableSprite(possessedFrames) ?? fallbackSprite;
+            return;
+        }
+
+        animatedVisualElapsedTime += Time.deltaTime;
+        int frameIndex = Mathf.FloorToInt(animatedVisualElapsedTime * framesPerSecond) % possessedFrames.Length;
+        possessedVisualRenderer.sprite = possessedFrames[frameIndex] ?? fallbackSprite;
+    }
+
+    private void ApplyPossessedVisualImmediate()
+    {
+        if (possessedVisualRenderer == null)
+            return;
+
+        Sprite[] possessedFrames = possessedAnimationFrames;
+        Sprite fallbackSprite = GetPossessedFallbackSprite();
+
+        if (HasSprites(possessedFrames))
+        {
+            possessedVisualRenderer.sprite = GetFirstAvailableSprite(possessedFrames) ?? fallbackSprite;
+            return;
+        }
+
+        if (fallbackSprite != null)
+            possessedVisualRenderer.sprite = fallbackSprite;
     }
 
     private bool IsSelectedByPista()
