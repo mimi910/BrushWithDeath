@@ -30,6 +30,8 @@ public class PlayerHealth : MonoBehaviour
     private Coroutine respawnRoutine;
     private Vector3 fallbackRespawnPosition;
 
+    public event Action<float, float> HealthChanged;
+
     public float CurrentHealth { get; private set; }
     public float MaxHealth => maxHealth;
     public bool IsDead { get; private set; }
@@ -153,6 +155,7 @@ public class PlayerHealth : MonoBehaviour
     private void SetCurrentHealth(float value)
     {
         CurrentHealth = Mathf.Clamp(value, 0f, maxHealth);
+        HealthChanged?.Invoke(CurrentHealth, maxHealth);
         onHealthChanged?.Invoke(CurrentHealth, maxHealth);
     }
 
