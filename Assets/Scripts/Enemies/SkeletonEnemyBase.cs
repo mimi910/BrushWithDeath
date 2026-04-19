@@ -227,6 +227,17 @@ public abstract class SkeletonEnemyBase : MonoBehaviour, IKnockbackable
         ApplyKnockback((Vector2)transform.position - sourcePosition, strengthMultiplier);
     }
 
+    public bool IsWithinDetectionRange(Vector2 worldPosition)
+    {
+        if (IsDead)
+            return false;
+
+        if (detectionRange <= 0f)
+            return true;
+
+        return ((Vector2)transform.position - worldPosition).sqrMagnitude <= detectionRange * detectionRange;
+    }
+
     public void Kill()
     {
         if (IsDead)

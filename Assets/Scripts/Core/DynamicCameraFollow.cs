@@ -13,13 +13,17 @@ public class DynamicCameraFollow : MonoBehaviour
     [Header("Framing")]
     [SerializeField] private float positionSmoothTime = 0.12f;
     [SerializeField] private Vector2 framingPadding = new Vector2(1.5f, 1.25f);
-    [SerializeField] private float latchedPlayerWeight = 0.7f;
-    [SerializeField] private float latchedPistaWeight = 0.3f;
-    [SerializeField] private float movingPlayerWeight = 0.6f;
-    [SerializeField] private float movingPistaWeight = 0.4f;
-    [SerializeField] private float aimingPlayerWeight = 0.55f;
-    [SerializeField] private float aimingPistaWeight = 0.2f;
-    [SerializeField] private float aimingPreviewWeight = 0.25f;
+    [SerializeField] private float latchedPlayerWeight = 0.45f;
+    [SerializeField] private float latchedPistaWeight = 0.55f;
+    [SerializeField] private float movingPlayerWeight = 0.45f;
+    [SerializeField] private float movingPistaWeight = 0.55f;
+    [SerializeField] private float aimingPlayerWeight = 0.4f;
+    [SerializeField] private float aimingPistaWeight = 0.6f;
+    [SerializeField] private float aimingPreviewWeight = 0.35f;
+    [SerializeField] private float remoteAimingPlayerWeight = 0.3f;
+    [SerializeField] private float remoteAimingPistaWeight = 0.7f;
+    [SerializeField] private float remoteAimingPreviewWeight = 0.35f;
+    [SerializeField] private float remotePistaDistanceThreshold = 0.35f;
     [SerializeField] private float extraPlayerWeightForNonNormalState = 0.15f;
 
     [Header("Zoom")]
@@ -72,6 +76,10 @@ public class DynamicCameraFollow : MonoBehaviour
         aimingPlayerWeight = Mathf.Max(0f, aimingPlayerWeight);
         aimingPistaWeight = Mathf.Max(0f, aimingPistaWeight);
         aimingPreviewWeight = Mathf.Max(0f, aimingPreviewWeight);
+        remoteAimingPlayerWeight = Mathf.Max(0f, remoteAimingPlayerWeight);
+        remoteAimingPistaWeight = Mathf.Max(0f, remoteAimingPistaWeight);
+        remoteAimingPreviewWeight = Mathf.Max(0f, remoteAimingPreviewWeight);
+        remotePistaDistanceThreshold = Mathf.Max(0f, remotePistaDistanceThreshold);
         extraPlayerWeightForNonNormalState = Mathf.Max(0f, extraPlayerWeightForNonNormalState);
 
         baseOrthographicSize = Mathf.Max(0.01f, baseOrthographicSize);
@@ -150,6 +158,22 @@ public class DynamicCameraFollow : MonoBehaviour
             && playerController.CurrentState != PlayerController.PlayerState.PistaFocus;
         float playerWeightBonus = playerInNonNormalState ? extraPlayerWeightForNonNormalState : 0f;
 
+        if (playerInPistaFocus)
+        {
+            bool pistaIsRemote = IsPistaRemoteFromPlayer();
+            float playerWeight = pistaIsRemote ? remoteAimingPlayerWeight : aimingPlayerWeight;
+            float pistaWeight = pistaIsRemote ? remoteAimingPistaWeight : aimingPistaWeight;
+            float previewWeight = pistaIsRemote ? remoteAimingPreviewWeight : aimingPreviewWeight;
+
+            focusTargets[0] = new FocusTarget(target.position, playerWeight + playerWeightBonus);
+            AddFocusTarget(ref focusTargetCount, pistaController.transform.position, pistaWeight);
+
+            if (pistaController.CurrentPreviewTarget != null)
+                AddFocusTarget(ref focusTargetCount, pistaController.CurrentPreviewTarget.position, previewWeight);
+
+            return focusTargetCount;
+        }
+
         switch (pistaController.CurrentState)
         {
             case PistaController.PistaState.Traveling:
@@ -163,16 +187,19 @@ public class DynamicCameraFollow : MonoBehaviour
                 return focusTargetCount;
         }
 
-        if (!playerInPistaFocus)
-            return focusTargetCount;
-
-        focusTargets[0] = new FocusTarget(target.position, aimingPlayerWeight + playerWeightBonus);
-        AddFocusTarget(ref focusTargetCount, pistaController.transform.position, aimingPistaWeight);
-
-        if (pistaController.CurrentPreviewTarget != null)
-            AddFocusTarget(ref focusTargetCount, pistaController.CurrentPreviewTarget.position, aimingPreviewWeight);
-
         return focusTargetCount;
+    }
+
+    private bool IsPistaRemoteFromPlayer()
+    {
+        if (pistaController == null || target == null)
+            return false;
+
+        float remoteDistance = remotePistaDistanceThreshold;
+        if (remoteDistance <= Mathf.Epsilon)
+            return false;
+
+        return (pistaController.transform.position - target.position).sqrMagnitude >= remoteDistance * remoteDistance;
     }
 
     private Vector3 CalculateWeightedCenter(int focusTargetCount)

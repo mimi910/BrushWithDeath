@@ -56,6 +56,7 @@ public class PlayerController : MonoBehaviour
         EnsureRequiredComponent<PlayerHealth>();
         EnsureRequiredComponent<PlayerProgression>();
         EnsureRequiredComponent<TempoGroundIndicator>();
+        GameTimer.EnsureInstance();
 
         inputReader = GetComponent<PlayerInputReader>();
         motor = GetComponent<PlayerMotor>();
