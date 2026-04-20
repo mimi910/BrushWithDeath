@@ -191,10 +191,10 @@ MonoBehaviour:
   body: {fileID: 7548294206093856567}
   animator: {fileID: 0}
   hitbox: {fileID: 1584431731322517496}
-  moveSpeed: 2.5
+  moveSpeed: 2
   knockbackDistance: 1
   damage: 1
-  attackSpeed: 1
+  attackSpeed: 0.7
   attackRange: 2.83
   detectionRange: 6
   containmentInsetDistance: 0.1
@@ -206,11 +206,11 @@ MonoBehaviour:
   idleArrivalDistance: 0.1
   idlePointSampleAttempts: 8
   slowTempo:
-    moveSpeedMultiplier: 1
-    knockbackMultiplier: 1
-    damageMultiplier: 1
-    attackSpeedMultiplier: 1
-    attackRangeMultiplier: 1
+    moveSpeedMultiplier: 0.5
+    knockbackMultiplier: 0.5
+    damageMultiplier: 2
+    attackSpeedMultiplier: 0.5
+    attackRangeMultiplier: 1.5
   midTempo:
     moveSpeedMultiplier: 1
     knockbackMultiplier: 1
@@ -218,17 +218,17 @@ MonoBehaviour:
     attackSpeedMultiplier: 1
     attackRangeMultiplier: 1
   fastTempo:
-    moveSpeedMultiplier: 1
-    knockbackMultiplier: 1
+    moveSpeedMultiplier: 1.5
+    knockbackMultiplier: 1.5
     damageMultiplier: 1
-    attackSpeedMultiplier: 1
-    attackRangeMultiplier: 1
+    attackSpeedMultiplier: 1.5
+    attackRangeMultiplier: 0.75
   intenseTempo:
-    moveSpeedMultiplier: 1
-    knockbackMultiplier: 1
+    moveSpeedMultiplier: 2
+    knockbackMultiplier: 2
     damageMultiplier: 1
-    attackSpeedMultiplier: 1
-    attackRangeMultiplier: 1
+    attackSpeedMultiplier: 2
+    attackRangeMultiplier: 0.5
   attackTriggerName: Attack
   deathTriggerName: Die
   deadBoolName: IsDead
