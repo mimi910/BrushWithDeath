@@ -340,6 +340,17 @@
                 },
                 {
                     "name": "",
+                    "id": "ef88b892-4a22-4a3d-b9a2-356b91b47fc4",
+                    "path": "<Gamepad>/leftShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Tempo",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "29492d0e-702d-4d4d-84f0-d560b7ca2bff",
                     "path": "<Gamepad>/buttonSouth",
                     "interactions": "",
@@ -441,6 +452,17 @@
                     "name": "",
                     "id": "1741e99a-741d-48d2-a0d9-4a813097e971",
                     "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Pista",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "20eaf48a-069a-4d6d-824f-d5f773e033c4",
+                    "path": "<Gamepad>/rightShoulder",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
