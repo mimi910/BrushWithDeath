@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6100000000000000000}
   - component: {fileID: 1140000000000000000}
   - component: {fileID: 2120000000000000000}
+  - component: {fileID: 1140000000000000001}
   m_Layer: 0
   m_Name: KeyPickup
   m_TagString: Untagged
@@ -68,7 +69,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.00086067244, y: 0.00174262}
+  m_Offset: {x: -0.0008606687, y: -0.16237004}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -78,7 +79,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.11444024, y: 0.1714896}
+  m_Size: {x: 0.2741174, y: 0.49971488}
   m_EdgeRadius: 0
 --- !u!114 &1140000000000000000
 MonoBehaviour:
@@ -90,7 +91,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e4b6f198d9f342c0b1765d1a0bc2ef55, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::KeyPickup
 --- !u!212 &2120000000000000000
 SpriteRenderer:
@@ -151,3 +152,18 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &1140000000000000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000000000000000000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 069074f4742d4f0f8a55b6e8f135e0cb, type: 3}
+  m_Name: ""
+  m_EditorClassIdentifier: Assembly-CSharp::PickupBob
+  amplitude: 0.06
+  frequency: 2.25
+  randomizeStartOffset: 1

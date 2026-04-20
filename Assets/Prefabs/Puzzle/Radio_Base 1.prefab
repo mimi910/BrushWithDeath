@@ -56,8 +56,8 @@ MonoBehaviour:
   auraTransform: {fileID: 4986891761818006205}
   auraDiameterMultiplier: 0.4
   slowAuraColor: {r: 0.2, g: 0.6, b: 1, a: 0.2}
-  fastAuraColor: {r: 1, g: 0.65, b: 0.2, a: 0.2}
-  intenseAuraColor: {r: 1, g: 0.2, b: 0.2, a: 0.25}
+  fastAuraColor: {r: 1, g: 0.20000002, b: 0.20000002, a: 0.2}
+  intenseAuraColor: {r: 0.9607843, g: 0.49019608, b: 0.2509804, a: 0.25}
   offStateRenderer: {fileID: 3216314188308562056}
   activeStateRenderer: {fileID: 3402448707460719370}
   offSprite: {fileID: -8145360305058645958, guid: 3ffeea94189e2ff4a87b4b1554f8e51b, type: 3}

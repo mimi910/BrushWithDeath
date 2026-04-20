@@ -30,6 +30,8 @@ public class PlayerHealth : MonoBehaviour
     private Coroutine respawnRoutine;
     private Vector3 fallbackRespawnPosition;
 
+    public event Action<float, float> HealthChanged;
+
     public float CurrentHealth { get; private set; }
     public float MaxHealth => maxHealth;
     public bool IsDead { get; private set; }
@@ -106,6 +108,9 @@ public class PlayerHealth : MonoBehaviour
 
     private IEnumerator RespawnAfterDelay()
     {
+        if (playerController != null)
+            yield return playerController.WaitForDeathAnimationToFinish();
+
         DeathScreenUI deathScreen = DeathScreenUI.Instance;
         if (deathScreen != null)
             yield return deathScreen.FadeToBlack();
@@ -116,11 +121,12 @@ public class PlayerHealth : MonoBehaviour
         if (holdDuration > 0f)
             yield return new WaitForSecondsRealtime(holdDuration);
 
+        IsDead = false;
+        playerController?.ExitDeathState();
+
         if (deathScreen != null)
             yield return deathScreen.FadeFromBlack();
 
-        IsDead = false;
-        playerController?.ExitDeathState();
         onRespawn?.Invoke();
         respawnRoutine = null;
     }
@@ -149,6 +155,7 @@ public class PlayerHealth : MonoBehaviour
     private void SetCurrentHealth(float value)
     {
         CurrentHealth = Mathf.Clamp(value, 0f, maxHealth);
+        HealthChanged?.Invoke(CurrentHealth, maxHealth);
         onHealthChanged?.Invoke(CurrentHealth, maxHealth);
     }
 

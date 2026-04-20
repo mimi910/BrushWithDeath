@@ -295,6 +295,9 @@ public class EnemySpawnZone : MonoBehaviour
             return;
         }
 
+        if (!IsPlayerNearActiveEnemy())
+            return;
+
         if (tempoService.IsChanneling)
             return;
 
@@ -342,6 +345,25 @@ public class EnemySpawnZone : MonoBehaviour
     private bool IsPlayerInsideZone()
     {
         return playerTransform != null && IsPointInsideSpawnArea(playerTransform.position);
+    }
+
+    private bool IsPlayerNearActiveEnemy()
+    {
+        CleanupDestroyedEnemies();
+
+        if (playerTransform == null)
+            return false;
+
+        Vector2 playerPosition = playerTransform.position;
+
+        for (int i = 0; i < activeEnemies.Count; i++)
+        {
+            SkeletonEnemyBase enemy = activeEnemies[i];
+            if (enemy != null && enemy.IsWithinDetectionRange(playerPosition))
+                return true;
+        }
+
+        return false;
     }
 
     private TempoBand GetRandomNextTempo(TempoBand currentTempo)

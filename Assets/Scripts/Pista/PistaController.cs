@@ -209,6 +209,9 @@ public class PistaController : MonoBehaviour
 
     public int TriggerPulseAttack()
     {
+        if (CurrentState != PistaState.LatchedToLantern || CurrentLanternTarget == null)
+            return 0;
+
         ContactFilter2D contactFilter = CreatePulseAttackContactFilter();
         int overlapHitCount = Physics2D.OverlapCircle(transform.position, GetPulseAttackRadius(), contactFilter, pulseAttackResults);
 

@@ -1,17 +1,22 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class PlayerInteractor : MonoBehaviour
 {
-    [Header("Interact / Lantern")]
+    [Header("Lantern Interaction")]
     [SerializeField] private float interactionDistance = 0.75f;
     [SerializeField] private float interactionRadius = 0.2f;
 
-    [Header("Guitar")]
-    [SerializeField] private Vector2 guitarHitboxSize = new(0.9f, 1.15f);
-    [SerializeField] private float guitarHitboxDistance = 0.75f;
-    [SerializeField, Min(0f)] private float guitarKnockbackAmount = 1f;
-    [SerializeField] private LayerMask guitarHitLayers = ~0;
+    [Header("Lantern Knockback")]
+    [FormerlySerializedAs("guitarHitboxSize")]
+    [SerializeField] private Vector2 lanternHitboxSize = new(0.9f, 1.15f);
+    [FormerlySerializedAs("guitarHitboxDistance")]
+    [SerializeField] private float lanternHitboxDistance = 0.75f;
+    [FormerlySerializedAs("guitarKnockbackAmount")]
+    [SerializeField, Min(0f)] private float lanternKnockbackAmount = 1f;
+    [FormerlySerializedAs("guitarHitLayers")]
+    [SerializeField] private LayerMask lanternHitLayers = ~0;
 
     private Collider2D[] selfColliders;
 
@@ -22,10 +27,7 @@ public class PlayerInteractor : MonoBehaviour
 
     public bool TryInteract(Vector2 facingDirection, PlayerController player)
     {
-        if (!TryCast(facingDirection, out RaycastHit2D hit))
-            return false;
-
-        if (!TryGetInterface(hit.collider, out IInteractable interactable, out _))
+        if (!TryFindTarget(facingDirection, out IInteractable interactable, out _))
             return false;
 
         interactable.Interact(player);
@@ -34,22 +36,33 @@ public class PlayerInteractor : MonoBehaviour
 
     public bool TryLight(Vector2 facingDirection, PlayerController player)
     {
-        if (!TryCast(facingDirection, out RaycastHit2D hit))
-            return false;
-
-        if (!TryGetInterface(hit.collider, out ILightable lightable, out _))
+        if (!TryFindTarget(facingDirection, out ILightable lightable, out _))
             return false;
 
         lightable.Light(player);
         return true;
     }
 
-    public int TryGuitarHit(Vector2 facingDirection)
+    public int TryLanternSwing(Vector2 facingDirection, PlayerController player)
+    {
+        int affectedCount = 0;
+
+        if (TryLight(facingDirection, player))
+            affectedCount++;
+
+        if (TryInteract(facingDirection, player))
+            affectedCount++;
+
+        affectedCount += TryLanternKnockback(facingDirection);
+        return affectedCount;
+    }
+
+    public int TryLanternKnockback(Vector2 facingDirection)
     {
         Vector2 direction = DirectionUtility.ToCardinal(facingDirection);
-        Vector2 hitboxCenter = GetGuitarHitboxCenter(direction);
-        float hitboxAngle = GetGuitarHitboxAngle(direction);
-        Collider2D[] hits = Physics2D.OverlapBoxAll(hitboxCenter, guitarHitboxSize, hitboxAngle, guitarHitLayers);
+        Vector2 hitboxCenter = GetLanternHitboxCenter(direction);
+        float hitboxAngle = GetLanternHitboxAngle(direction);
+        Collider2D[] hits = Physics2D.OverlapBoxAll(hitboxCenter, lanternHitboxSize, hitboxAngle, lanternHitLayers);
 
         HashSet<int> processedTargets = new();
         int hitCount = 0;
@@ -65,7 +78,7 @@ public class PlayerInteractor : MonoBehaviour
             if (targetComponent == null || !processedTargets.Add(targetComponent.GetInstanceID()))
                 continue;
 
-            knockbackable.ApplyKnockbackFrom(transform.position, guitarKnockbackAmount);
+            knockbackable.ApplyKnockbackFrom(transform.position, lanternKnockbackAmount);
             hitCount++;
         }
 
@@ -82,7 +95,7 @@ public class PlayerInteractor : MonoBehaviour
             direction = motor.FacingDirection;
 
         DrawInteractionGizmo(origin, direction);
-        DrawGuitarGizmo(direction);
+        DrawLanternKnockbackGizmo(direction);
     }
 
     private void DrawInteractionGizmo(Vector2 origin, Vector2 direction)
@@ -93,20 +106,24 @@ public class PlayerInteractor : MonoBehaviour
         Gizmos.DrawWireSphere(origin + direction * interactionDistance, interactionRadius);
     }
 
-    private void DrawGuitarGizmo(Vector2 direction)
+    private void DrawLanternKnockbackGizmo(Vector2 direction)
     {
-        Vector2 hitboxCenter = GetGuitarHitboxCenter(direction);
-        float hitboxAngle = GetGuitarHitboxAngle(direction);
+        Vector2 hitboxCenter = GetLanternHitboxCenter(direction);
+        float hitboxAngle = GetLanternHitboxAngle(direction);
         Matrix4x4 previousMatrix = Gizmos.matrix;
 
         Gizmos.color = new Color(1f, 0.35f, 0.15f, 0.55f);
         Gizmos.matrix = Matrix4x4.TRS(hitboxCenter, Quaternion.Euler(0f, 0f, hitboxAngle), Vector3.one);
-        Gizmos.DrawWireCube(Vector3.zero, guitarHitboxSize);
+        Gizmos.DrawWireCube(Vector3.zero, lanternHitboxSize);
         Gizmos.matrix = previousMatrix;
     }
 
-    private bool TryCast(Vector2 facingDirection, out RaycastHit2D validHit)
+    private bool TryFindTarget<T>(Vector2 facingDirection, out T target, out Component component)
+        where T : class
     {
+        target = null;
+        component = null;
+
         Vector2 direction = DirectionUtility.ToCardinal(facingDirection);
         Vector2 origin = transform.position;
         RaycastHit2D[] hits = Physics2D.CircleCastAll(origin, interactionRadius, direction, interactionDistance);
@@ -116,20 +133,23 @@ public class PlayerInteractor : MonoBehaviour
             if (!hit.collider || IsSelfCollider(hit.collider))
                 continue;
 
-            validHit = hit;
+            if (!TryGetInterface(hit.collider, out target, out component))
+                continue;
+
             return true;
         }
 
-        validHit = default;
+        target = null;
+        component = null;
         return false;
     }
 
-    private Vector2 GetGuitarHitboxCenter(Vector2 direction)
+    private Vector2 GetLanternHitboxCenter(Vector2 direction)
     {
-        return (Vector2)transform.position + direction * guitarHitboxDistance;
+        return (Vector2)transform.position + direction * lanternHitboxDistance;
     }
 
-    private static float GetGuitarHitboxAngle(Vector2 direction)
+    private static float GetLanternHitboxAngle(Vector2 direction)
     {
         return Mathf.Abs(direction.x) > 0.5f ? 90f : 0f;
     }

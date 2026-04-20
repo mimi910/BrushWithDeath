@@ -9,9 +9,7 @@ public class PlayerInputReader : MonoBehaviour
     private PlayerInput playerInput;
 
     private InputAction moveAction;
-    private InputAction interactAction;
     private InputAction lanternAction;
-    private InputAction guitarAction;
     private InputAction tempoAction;
     private InputAction tempoIntenseAction;
     private InputAction tempoSlowAction;
@@ -22,9 +20,7 @@ public class PlayerInputReader : MonoBehaviour
     public Vector2 MoveInput { get; private set; }
     public Vector2 LastMoveInput { get; private set; } = Vector2.down;
 
-    public bool InteractPressed { get; private set; }
     public bool LanternPressed { get; private set; }
-    public bool GuitarPressed { get; private set; }
     public bool TempoPressed { get; private set; }
     public bool TempoHeld { get; private set; }
     public bool TempoIntensePressed { get; private set; }
@@ -46,9 +42,7 @@ public class PlayerInputReader : MonoBehaviour
         playerInput = GetComponent<PlayerInput>();
 
         moveAction = playerInput.actions["Move"];
-        interactAction = playerInput.actions["Interact"];
         lanternAction = playerInput.actions["Lantern"];
-        guitarAction = playerInput.actions["Guitar"];
         tempoAction = playerInput.actions["Tempo"];
         tempoIntenseAction = playerInput.actions["TempoIntense"];
         tempoSlowAction = playerInput.actions["TempoSlow"];
@@ -76,9 +70,7 @@ public class PlayerInputReader : MonoBehaviour
 
     private void ReadButtons()
     {
-        InteractPressed = interactAction.WasPressedThisFrame();
         LanternPressed = lanternAction.WasPressedThisFrame();
-        GuitarPressed = guitarAction.WasPressedThisFrame();
         TempoPressed = tempoAction.WasPressedThisFrame();
         TempoHeld = tempoAction.IsPressed();
         TempoIntensePressed = tempoIntenseAction.WasPressedThisFrame();
@@ -106,9 +98,7 @@ public class PlayerInputReader : MonoBehaviour
 
     public void ClearFrameButtons()
     {
-        InteractPressed = false;
         LanternPressed = false;
-        GuitarPressed = false;
         TempoPressed = false;
         TempoIntensePressed = false;
         TempoSlowPressed = false;

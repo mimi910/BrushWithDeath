@@ -340,6 +340,17 @@
                 },
                 {
                     "name": "",
+                    "id": "ef88b892-4a22-4a3d-b9a2-356b91b47fc4",
+                    "path": "<Gamepad>/leftShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Tempo",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "29492d0e-702d-4d4d-84f0-d560b7ca2bff",
                     "path": "<Gamepad>/buttonSouth",
                     "interactions": "",
@@ -450,6 +461,17 @@
                 },
                 {
                     "name": "",
+                    "id": "20eaf48a-069a-4d6d-824f-d5f773e033c4",
+                    "path": "<Gamepad>/rightShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Pista",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "e477072a-19bb-4348-9484-069e507df433",
                     "path": "<Gamepad>/buttonSouth",
                     "interactions": "",
@@ -463,6 +485,28 @@
                     "name": "",
                     "id": "6405d103-f13d-4c4f-8f45-e84085a83cce",
                     "path": "<Keyboard>/f",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Lantern",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e2bde0a5-35a1-4d61-a8d3-5e0202c0e875",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Lantern",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "44abbfba-3f3f-4e90-be04-6b4aad6d66c3",
+                    "path": "<Gamepad>/buttonWest",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
